@@ -16,6 +16,7 @@ func main() {
 	e.GET("/", handlers.HomeHandler)
 	e.POST("/data", handlers.PostDataHandler)
 	e.GET("/data", handlers.GetAllDataHandler)
+	e.GET("/data/:id", handlers.GetDataByIdHandler)
 	e.Logger.Fatal(e.Start(":8081"))
 
 }

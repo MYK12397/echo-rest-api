@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -47,5 +48,35 @@ func GetAllDataHandler(c echo.Context) error {
 	res["status"] = "ok"
 	res["data"] = user
 
+	return c.JSON(http.StatusOK, res)
+}
+
+func GetDataByIdHandler(c echo.Context) error {
+
+	r, err := ioutil.ReadFile("data.json")
+
+	id := c.Param("id")
+	ID, _ := strconv.Atoi(id)
+	if err != nil {
+		c.String(http.StatusBadGateway, "unable to process data")
+	}
+	var user Users
+
+	err = json.Unmarshal(r, &user.Data)
+
+	if err != nil {
+		c.String(http.StatusBadGateway, "unable to process data")
+	}
+	var ans Users
+
+	for _, doc := range user.Data {
+		if doc.Id == ID {
+			ans.Data = append(ans.Data, doc)
+		}
+	}
+
+	res := make(map[string]interface{})
+	res["status"] = "ok"
+	res["data"] = ans
 	return c.JSON(http.StatusOK, res)
 }
